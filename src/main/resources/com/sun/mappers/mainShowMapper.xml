@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.MainShowDao">
+
+	<resultMap type="MainShow" id="MainShowResult">
+		<result property="id" column="id"/>
+		<result property="sywzdm" column="sywzdm"/>
+		<result property="sywzmc" column="sywzmc"/>
+		<result property="tplj" column="tplj"/>
+		<result property="backcolor" column="backcolor"/>
+		<result property="xh" column="xh"/>
+		<result property="spkid" column="spkid"/>
+	</resultMap>
+	
+	<select id="findListBySywzdm" parameterType="Map" resultMap="MainShowResult">
+		select a.* from (select tplj,spkid,backcolor from T_MAINSHOW where sywzdm=#{sywzdm} order by xh desc , id desc) a where rownum&lt;#{showSize}
+	</select>
+	
+</mapper> 

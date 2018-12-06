@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.BackHuoDongDao">
+
+	<resultMap type="HuoDong" id="HuoDongResult">
+		<result property="id" column="id"/>
+		<result property="huoDongContent" column="huoDongContent"/>
+		<result property="show" column="show"/>
+		<result property="xh" column="xh"/>
+		<result property="show1" column="show1"/>
+		<result property="xh1" column="xh1"/>
+		<result property="area" column="area"/>
+		<result property="sfyx" column="sfyx"/>
+		<result property="homePageHuoDongCarousel" column="homePageHuoDongCarousel"/>
+		<result property="homePageHuoDongCarouselXh" column="homePageHuoDongCarouselXh"/>
+		<result property="homePageHuoDongCarouselTp" column="homePageHuoDongCarouselTp"/>
+	</resultMap>
+	
+	<select id="list" parameterType="Map" resultMap="HuoDongResult">
+		select * from( select rownum as rown,a.* from ( select t.* from T_HUODONG t,t_spk s
+   	 	where t.spkid=s.id 
+   	 	<if test="searchName!=null and searchName!=''">
+   	 		and s.zjm || s.spdm || s.spmc like #{searchName} 
+   	 	</if>
+   	 	<if test="twoBarId!=null and twoBarId!=0">
+   	 		and t.twoBarId=#{twoBarId}
+   	 	</if>
+   	 	<if test="threeBarId!=null and threeBarId!=0">
+   	 		and t.threeBarId=#{threeBarId}
+   	 	</if>
+		order by t.id desc)a where rownum&lt;=#{page}*#{size}) b where b.rown&gt;(#{page}-1)*#{size}
+	</select>
+	
+	<select id="total" parameterType="Map" resultType="Long">
+		select count(*) from T_HUODONG t,t_spk s
+		where t.spkid=s.id 
+		<if test="searchName!=null and searchName!=''">
+   	 		and s.zjm || s.spdm || s.spmc like #{searchName} 
+   	 	</if>
+   	 	<if test="twoBarId!=null and twoBarId!=0">
+   	 		and t.twoBarId=#{twoBarId}
+   	 	</if>
+   	 	<if test="threeBarId!=null and threeBarId!=0">
+   	 		and t.threeBarId=#{threeBarId}
+   	 	</if>
+	</select>
+	
+	<insert id="add" parameterType="HuoDong">
+		insert into T_HUODONG(id,huoDongContent,show,xh,show1,xh1,area,sfyx,homePageHuoDongCarousel,homePageHuoDongCarouselXh,homePageHuoDongCarouselTp,spkId,twoBarId,twoBarName,threeBarId,hdtime,startTime)
+		values (huodong_seq.nextval,#{huoDongContent},#{show},#{xh},#{show1},#{xh1},#{area},#{sfyx},#{homePageHuoDongCarousel},#{homePageHuoDongCarouselXh},#{homePageHuoDongCarouselTp},#{spkId},#{twoBarId},#{twoBarName},#{threeBarId},#{hdtime},#{startTime})
+	</insert>
+	
+	<update id="update" parameterType="HuoDong">
+		update T_HUODONG 
+		<set>
+			huoDongContent=#{huoDongContent},
+			show=#{show},
+			xh=#{xh},
+			show1=#{show1},
+			xh1=#{xh1},
+			area=#{area},
+			sfyx=#{sfyx},
+			homePageHuoDongCarousel=#{homePageHuoDongCarousel},
+			homePageHuoDongCarouselXh=#{homePageHuoDongCarouselXh},
+			<if test="homePageHuoDongCarouselTp!=null and homePageHuoDongCarouselTp!=''">
+				homePageHuoDongCarouselTp=#{homePageHuoDongCarouselTp},
+			</if>
+			spkId=#{spkId},
+			twoBarId=#{twoBarId},
+			twoBarName=#{twoBarName},
+			threeBarId=#{threeBarId},
+			hdtime=#{hdtime},
+		</set>
+		where id=#{id}
+	</update> 
+	
+	<delete id="delete" parameterType="Integer">
+		delete from T_HUODONG where id=#{id}
+	</delete>
+	
+	<select id="getOne" parameterType="Map" resultMap="HuoDongResult">
+		select * from T_HUODONG t
+		<where>
+			<if test="spkId!=null and spkId!=0">
+				and t.spkId=#{spkId}
+			</if>
+			<if test="sfyx!=null and sfyx!=''">
+				and t.sfyx=#{sfyx}
+			</if>
+		</where>
+	</select>
+	
+	
+</mapper> 

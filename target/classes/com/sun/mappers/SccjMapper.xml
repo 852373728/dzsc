@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.SccjDao">
+
+	<resultMap type="Sccj" id="SccjResult">
+		<result property="id" column="id"/>
+		<result property="cjmc" column="cjmc"/>
+		<result property="cjdm" column="cjdm"/>
+		<result property="show" column="show"/>
+		<result property="xh" column="xh"/>
+		<result property="splbDm" column="splbDm"/>
+		<result property="cjjj" column="cjjj"/>
+		<result property="tplj" column="tplj"/>
+		<result property="tuijianShow" column="tuijianShow"/>
+		<result property="tuijianxh" column="tuijianxh"/>
+		<result property="pinpaiShow" column="pinpaiShow"/>
+		<result property="pinpaixh" column="pinpaixh"/>
+	</resultMap>
+	
+	<select id="findBysplbdm" parameterType="String" resultMap="SccjResult">
+		select a.* from (select * from T_SCCJ t where t.splbDm=#{splbDm}  order by xh desc)a where rownum&lt;9
+	</select>
+	
+	<select id="tuiJian" resultMap="SccjResult">
+		select a.* from (
+		select t.id,t.cjmc,t.cjdm,t.tplj from T_SCCJ t where t.tuijianshow=1 order by t.tuijianxh desc) a where rownum&lt;11
+	</select>
+	
+	<select id="pinpaiShow" resultMap="SccjResult">
+		select a.* from (
+		select * from T_SCCJ t where t.pinpaishow=1 order by t.pinpaixh desc)a where rownum&lt;13
+	</select>
+	
+	<select id="fenye" parameterType="Map" resultMap="SccjResult">
+		select * from (
+		select rownum as rowno ,a.* from (
+		select * from T_SCCJ t where t.show='上架' order by t.xh desc)a where rownum&lt;=#{page}*#{size}) b where b.rowno&gt;(#{page}-1)*#{size}
+	</select>
+	
+	<select id="total" parameterType="Map" resultType="Long">
+		select count(*) from T_SCCJ t
+	</select>
+	
+	<select id="getSccj" parameterType="String" resultMap="SccjResult">
+		select * from T_SCCJ t where rownum&lt;2
+		<if test="cjmc!=null and cjmc!=''">
+			and t.cjmc=#{cjmc}
+		</if> 
+		
+		
+	</select>
+	
+</mapper> 

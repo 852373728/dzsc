@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.BackSccjDao">
+
+	<resultMap type="Sccj" id="SccjResult">
+		<result property="id" column="id"/>
+		<result property="cjmc" column="cjmc"/>
+		<result property="cjdm" column="cjdm"/>
+		<result property="show" column="show"/>
+		<result property="xh" column="xh"/>
+		<result property="splbDm" column="splbDm"/>
+		<result property="cjjj" column="cjjj"/>
+		<result property="tplj" column="tplj"/>
+		<result property="tuijianShow" column="tuijianShow"/>
+		<result property="tuijianxh" column="tuijianxh"/>
+		<result property="pinpaiShow" column="pinpaiShow"/>
+		<result property="pinpaixh" column="pinpaixh"/>
+	</resultMap>
+	
+	<select id="list" parameterType="Map" resultMap="SccjResult">
+		select * from( select rownum as rown,a.* from ( select * from T_SCCJ t 
+		order by id desc)a where rownum&lt;=#{page}*#{size}) b where b.rown&gt;(#{page}-1)*#{size}
+	</select>
+	
+	<select id="total" parameterType="Map" resultType="Long">
+		select count(*) from T_SCCJ t
+	</select>
+	
+	<update id="update" parameterType="Sccj">
+		update T_SCCJ
+		<set>
+			xh=#{xh},show=#{show},splbDm=#{splbDm},tuijianShow=#{tuijianShow},tuijianxh=#{tuijianxh},
+			pinpaiShow=#{pinpaiShow},pinpaixh=#{pinpaixh},
+		</set>
+		where id=#{id}
+	</update>
+	
+	
+</mapper> 

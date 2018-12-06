@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.HistoryGoodsDao">
+
+	<resultMap type="HistoryGoods" id="HistoryGoodsResult">
+		<result property="id" column="id"/>
+		<result property="spdm" column="spdm"/>
+		<result property="userName" column="userName"/>
+		<result property="buyNum" column="buyNum"/>
+	</resultMap>
+	
+	<insert id="add" parameterType="HistoryGoods">
+		insert into T_HISTORYGOODS (id,spdm,userName,buyNum)
+		values (historygood_seq.nextval,#{spdm},#{userName},#{buyNum})
+	</insert>
+	
+	<update id="update" parameterType="HistoryGoods">
+		update T_HISTORYGOODS set buyNum=buyNum+${buyNum}
+		where userName=#{userName} and spdm=#{spdm}
+	</update>
+	
+	<select id="findByUserName" parameterType="Map" resultType="com.sun.entity.HistoryGoods">
+		select s.spmc,s.sccj1,s.id,s.dw,h.spdm,h.buynum from T_SPK s,T_HISTORYGOODS h where s.spdm=h.spdm and s.sj_xz='上架' and s.st_lb='在库' and h.username=#{username} 
+		<if test="searchName!=null and searchName!=''">
+			and s.spmc like #{searchName}
+		</if>
+		order by id desc
+	</select>
+	
+	<select id="exit" parameterType="Map" resultType="Long">
+		select count(*) from T_HISTORYGOODS where userName=#{username} and spdm=#{spdm}
+	</select>
+	
+	
+</mapper> 

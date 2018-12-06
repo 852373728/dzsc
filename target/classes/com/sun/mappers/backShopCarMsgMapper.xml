@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.BackShopCarMsgDao">
+
+	<insert id="update" parameterType="com.sun.entity.ShopCarMsg">
+		update T_SHOPCARMSG set msg=#{msg},zj=#{zj},flag=#{flag} where id=#{id}
+	</insert>
+	
+	<select id="list" resultType="com.sun.entity.ShopCarMsg">
+		select * from T_SHOPCARMSG t
+	</select>
+	
+	<select id="getOne" parameterType="Integer" resultType="com.sun.entity.ShopCarMsg">
+		select * from T_SHOPCARMSG t where t.id=#{id} and t.flag=1
+	</select>
+	
+</mapper> 

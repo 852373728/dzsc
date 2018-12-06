@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.SpkLbDao">
+
+	<resultMap type="SpkLb" id="SpkLbResult">
+		<result property="id" column="id"/>
+		<result property="lbdm" column="lbdm"/>
+		<result property="lbmc" column="lbmc"/>
+		<result property="lbparent" column="lbparent"/>
+		<result property="cjbz" column="cjbz"/>
+		<result property="KCSL" column="KCSL"/>
+		<result property="KCJE" column="KCJE"/>
+		<result property="KHJE" column="KHJE"/>
+		<result property="xssl" column="xssl"/>
+		<result property="xsje" column="xsje"/>
+		<result property="cbje" column="cbje"/>
+		<result property="ml" column="ml"/>
+		<result property="mll" column="mll"/>
+		<result property="khml" column="khml"/>
+		<result property="qcsl" column="qcsl"/>
+		<result property="qcje" column="qcje"/>
+		<result property="jhje" column="jhje"/>
+		<result property="jhsl" column="jhsl"/>
+		<result property="sysl" column="sysl"/>
+		<result property="syje" column="syje"/>
+		<result property="jysl" column="jysl"/>
+		<result property="jyje" column="jyje"/>
+		<result property="zid" column="zid"/>
+		<result property="mxid" column="mxid"/>
+		<result property="xh" column="xh"/>
+		<result property="show" column="show"/>
+	</resultMap>
+	
+	<select id="findByLbParent" parameterType="String" resultMap="SpkLbResult">
+		select t.id,t.lbdm,t.lbmc,t.lbparent,t.cjbz from t_spklb t where t.lbparent=#{lbparent} order by t.lbdm
+	</select>
+	
+	<select id="findLevel" parameterType="Map" resultMap="SpkLbResult">
+		select a.* from (select t.id,t.lbdm,t.lbmc from T_SPKLB t where t.lbparent=#{lbparent} and show=1 order by t.lbdm)a where rownum&lt;#{rowSize}
+	</select>
+	
+</mapper> 

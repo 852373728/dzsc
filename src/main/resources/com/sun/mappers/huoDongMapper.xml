@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.HuoDongDao">
+
+	<resultMap type="HuoDong" id="HuoDongResult">
+		<result property="id" column="id"/>
+		<result property="huoDongContent" column="huoDongContent"/>
+		<result property="show" column="show"/>
+		<result property="xh" column="xh"/>
+		<result property="show1" column="show1"/>
+		<result property="xh1" column="xh1"/>
+		<result property="area" column="area"/>
+		<result property="sfyx" column="sfyx"/>
+		<result property="homePageHuoDongCarousel" column="homePageHuoDongCarousel"/>
+		<result property="homePageHuoDongCarouselXh" column="homePageHuoDongCarouselXh"/>
+		<result property="homePageHuoDongCarouselTp" column="homePageHuoDongCarouselTp"/>
+	</resultMap>
+	
+	
+	<select id="findByhpCarosel" resultMap="HuoDongResult">
+	 	select a.* from (select t.* from T_HUODONG t where t.homepagehuodongcarousel=1 and t.sfyx=1 and t.hdtime&gt;sysdate
+	 	order by t.homepagehuodongcarouselxh desc)a where rownum&lt;6
+	</select>
+	
+	<select id="findByTwoBarId" parameterType="Integer" resultMap="HuoDongResult">
+		select a.* from(select t.spkid from T_HUODONG t where t.show1=1 and t.sfyx=1 and t.twobarid=#{twobarid} and t.hdtime&gt;sysdate
+		order by xh1 desc)a where rownum&lt;6
+	</select>
+	
+	<select id="hdyList" parameterType="Integer" resultMap="HuoDongResult">
+		select a.* from (
+		select t.spkid from T_HUODONG t where t.show=1 and t.sfyx=1 and t.twobarid=#{twobarid} and t.hdtime&gt;sysdate order by t.xh desc)a where rownum&lt;7
+	</select>
+	
+	<select id="getBySpkId" parameterType="Integer" resultMap="HuoDongResult">
+		select t.huodongcontent,t.id,t.hdtime as huodongover from T_HUODONG t where t.hdtime&gt;sysdate and t.sfyx=1 and t.spkid=#{spkid}
+	</select>
+	
+	
+</mapper> 

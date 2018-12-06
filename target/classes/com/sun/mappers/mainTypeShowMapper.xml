@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.MainTypeShowDao">
+
+	<resultMap type="MainTypeShow" id="MainTypeShowResult">
+		<result property="id" column="id"/>
+		<result property="homePageshow" column="homePageshow"/>
+		<result property="onePicTplj" column="onePicTplj"/>
+		<result property="homePagexh" column="homePagexh"/>
+		<result property="splbDm" column="splbDm"/>
+		<result property="spkId" column="spkId"/>
+	</resultMap>
+	
+	<select id="findhpBylbDm" parameterType="Map" resultMap="MainTypeShowResult">
+		select a.* from (select t.onepictplj,t.spkid from T_MAINTYPESHOW t where t.homepageshow=#{homepageshow} and t.splbdm=#{splbDm} order by t.homepagexh desc)a where rownum&lt;#{rownum}
+	</select>
+</mapper> 

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.FileDao">
+
+	<insert id="add" parameterType="com.sun.entity.T_File">
+		insert into t_file (id,name,path) values (file_seq.nextval,#{name},#{path})
+	</insert>
+	
+	<select id="list" resultType="com.sun.entity.T_File" parameterType="Map">
+		select b.id,b.name,b.path from (select rownum as rown,a.* from (select * from t_file 
+		<if test="searchName!=null and searchName!=''">
+			where name like #{searchName}
+		</if>
+		order by id desc )a where rownum&lt;=${page}*${size})b where b.rown&gt;(${page}-1)*${size}
+	</select>
+	
+	<select id="total" resultType="Long" parameterType="Map">
+		select count(*) from t_file
+		<if test="searchName!=null and searchName!=''">
+			where name like #{searchName}
+		</if>
+	</select>
+	
+	<delete id="delete" parameterType="Integer">
+			delete from t_file where id=#{id}
+	</delete>
+	
+</mapper> 

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.BackSpkDao">
+
+	<resultMap type="Spk" id="SpkResult">
+		<result property="id" column="id"/>
+		<result property="spdm" column="spdm"/>
+		<result property="zjm" column="zjm"/>
+		<result property="spmc" column="spmc"/>
+		<result property="spgg" column="spgg"/>
+		<result property="SCCJ1" column="SCCJ1"/>
+		<result property="sccj1dm" column="sccj1dm"/>
+		<result property="wbzsl" column="wbzsl"/>
+		<result property="nbzsl" column="nbzsl"/>
+		<result property="dw" column="dw"/>
+		<result property="sccj" column="sccj"/>
+		<result property="shl" column="shl"/>
+		<result property="jzrq" column="jzrq"/>
+		<result property="splb" column="splb"/>
+		<result property="splbdm" column="splbdm"/>
+		<result property="web_splb" column="web_splb"/>
+		<result property="web_splbdm" column="web_splbdm"/>
+		<result property="txm" column="txm"/>
+		<result property="pzwh" column="pzwh"/>
+		<result property="splsdj" column="splsdj"/>
+		<result property="sppfdj" column="sppfdj"/>
+		<result property="jxdm" column="jxdm"/>
+		<result property="jxmc" column="jxmc"/>
+		<result property="zlbz" column="zlbz"/>
+		<result property="USEDIN" column="USEDIN"/>
+		<result property="xingz" column="xingz"/>
+		<result property="yxq" column="yxq"/>
+		<result property="store" column="store"/>
+		<result property="baoz" column="baoz"/>
+		<result property="SPM" column="SPM"/>
+		<result property="YWM" column="YWM"/>
+		<result property="khdm" column="khdm"/>
+		<result property="khmc" column="khmc"/>
+		<result property="khxz" column="khxz"/>
+		<result property="qy_xz" column="qy_xz"/>
+		<result property="cl_xz" column="cl_xz"/>
+		<result property="cx_xz" column="cx_xz"/>
+		<result property="SPph" column="SPph"/>
+		<result property="yxrq" column="yxrq"/>
+		<result property="j_zj" column="j_zj"/>
+		<result property="j_xj" column="j_xj"/>
+		<result property="Lastupdate_ry" column="Lastupdate_ry"/>
+		<result property="Lastupdate_sj" column="Lastupdate_sj"/>
+		<result property="sj_xz" column="sj_xz"/>
+		<result property="Hasupload" column="Hasupload"/>
+		<result property="pict" column="pict"/>
+		<result property="xzmc" column="xzmc"/>
+		<result property="ylmc" column="ylmc"/>
+		<result property="kx_xz" column="kx_xz"/>
+		<result property="xj_xz" column="xj_xz"/>
+		<result property="j_cxj" column="j_cxj"/>
+		<result property="st_lb" column="st_lb"/>
+		<result property="xsjg" column="xsjg"/>
+		<result property="xlph" column="xlph"/>
+		<result property="djph" column="djph"/>
+		<result property="homePageshow" column="homePageshow"/>
+		<result property="onePicTplj" column="onePicTplj"/>
+		<result property="homePagexh" column="homePagexh"/>
+	</resultMap>
+	
+	<sql id="general">
+		where t.sj_xz='上架'
+		and t.st_lb='在库'
+	</sql>
+	
+	<select id="getOne" parameterType="Map" resultMap="SpkResult">
+		select * from t_spk t
+		<include refid="general"/>
+		<if test="id!=null and id!=0">
+			and t.id=#{id}
+		</if>
+	</select>
+	
+	<select id="list" parameterType="Map" resultMap="SpkResult">
+		select * from( select rownum as rown,a.* from ( select * from t_spk t 
+		<include refid="general"/>
+		<if test="spmc!=null and spmc!=''">
+			and t.spmc || t.spdm || t.zjm || t.SCCJ1 like #{spmc}
+		</if>
+		<if test="spk_ejfl!=null and spk_ejfl!=''"> 
+			and t.web_splbdm=#{spk_ejfl}
+		</if>
+		<if test="array!=null and array.length>0">
+			and t.web_splbdm in
+			<foreach item="item" index="index" collection="array" 
+                 open="(" separator="," close=")">
+                #{item}
+        	</foreach>
+		</if>
+		order by id)a where rownum&lt;=#{page}*#{size}) b where b.rown&gt;(#{page}-1)*#{size}
+	</select>
+	
+	<select id="total" parameterType="Map" resultType="Long">
+		select count(*) from t_spk t
+		<include refid="general"/>
+		<if test="spmc!=null and spmc!=''">
+			and t.spmc || t.spdm || t.zjm || t.SCCJ1 like #{spmc}
+		</if>
+		<if test="spk_ejfl!=null and spk_ejfl!=''"> 
+			and t.web_splbdm=#{spk_ejfl}
+		</if>
+		<if test="array!=null and array.length>0">
+			and t.web_splbdm in
+			<foreach item="item" index="index" collection="array" 
+                 open="(" separator="," close=")">
+                #{item}
+        	</foreach>
+		</if>
+	</select>
+	
+	<select id="listAll" parameterType="Map" resultMap="SpkResult">
+		select * from( select rownum as rown,a.* from ( select * from t_spk t 
+		<where>
+			<if test="searchName!=null and searchName!=''">
+	   	 		and t.zjm || t.spdm || t.spmc like #{searchName} 
+	   	 	</if>
+	   	 	<if test="sj_xz!=null and sj_xz!=''">
+	   	 		and sj_xz=#{sj_xz}
+	   	 	</if>
+	   	 	<if test="kx_xz!=null and kx_xz!=''">
+	   	 		and kx_xz=#{kx_xz}
+	   	 	</if>
+	   	 	<if test="st_lb!=null and st_lb!=''">
+	   	 		and st_lb=#{st_lb}
+	   	 	</if>
+		</where>
+		order by id)a where rownum&lt;=#{page}*#{size}) b where b.rown&gt;(#{page}-1)*#{size}
+	</select>
+	
+	<select id="totalAll" parameterType="Map" resultType="Long">
+		select count(*) from t_spk t
+		<where>
+			<if test="searchName!=null and searchName!=''">
+	   	 		and t.zjm || t.spdm || t.spmc like #{searchName} 
+	   	 	</if>
+	   	 	<if test="sj_xz!=null and sj_xz!=''">
+	   	 		and sj_xz=#{sj_xz}
+	   	 	</if>
+	   	 	<if test="kx_xz!=null and kx_xz!=''">
+	   	 		and kx_xz=#{kx_xz}
+	   	 	</if>
+	   	 	<if test="st_lb!=null and st_lb!=''">
+	   	 		and st_lb=#{st_lb}
+	   	 	</if>
+		</where>
+	</select>
+	
+</mapper> 

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.KhDao">
+
+	<resultMap type="Kh" id="KhResult">
+		<result property="id" column="id"/>
+		<result property="email" column="email"/>
+		<result property="password" column="password"/>
+		<result property="dwmc" column="dwmc"/>
+		<result property="lxr" column="lxr"/>
+		<result property="lxdh" column="lxdh"/>
+		<result property="qylx" column="qylx"/>
+		<result property="sheng" column="sheng"/>
+		<result property="shi" column="shi"/>
+		<result property="adress" column="adress"/>
+		<result property="zt" column="zt"/>
+	</resultMap>
+	
+	<insert id="add" parameterType="Kh">
+		insert into t_kh(id,email,password,dwmc,lxr,lxdh,zt,ST_USERCLASS) 
+		values(kh_seq.nextval,#{email},#{password},#{dwmc},#{lxr},#{lxdh},#{zt},#{st_userclass})
+	</insert>
+	
+	<select id="find" parameterType="Kh" resultMap="KhResult">
+		select * from T_KH t where rownum&lt;2
+		<if test="email!=null and email!=''">
+			and t.email=#{email}
+		</if>
+		<if test="password!=null and password!=''">
+			and t.password=#{password}
+		</if>
+	</select>
+	
+	<select id="buyPermissions" parameterType="Kh" resultMap="KhResult">
+		select * from T_KH t where t.email=#{email} and t.password=#{password} and t.zt='2' and t.st_userclass in ('客户','管理员','业务员')
+	</select>
+	
+	<update id="editPwd" parameterType="Map">
+		update T_KH 
+		<set>
+			<if test="password!=null and password!=''">
+				password=#{password},
+			</if>
+			isupdate=0,
+		</set>
+		where email=#{email}
+	</update>
+	
+</mapper> 

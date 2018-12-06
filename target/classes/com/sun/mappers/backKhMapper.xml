@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.BackKhDao">
+
+	<resultMap type="Kh" id="KhResult">
+		<result property="id" column="id"/>
+		<result property="email" column="email"/>
+		<result property="password" column="password"/>
+		<result property="dwmc" column="dwmc"/>
+		<result property="lxr" column="lxr"/>
+		<result property="lxdh" column="lxdh"/>
+		<result property="qylx" column="qylx"/>
+		<result property="sheng" column="sheng"/>
+		<result property="shi" column="shi"/>
+		<result property="adress" column="adress"/>
+		<result property="zt" column="zt"/>
+		<result property="st_userclass" column="st_userclass"/>
+		<result property="yxq" column="yxq"/>
+		<result property="ywybh" column="ywybh"/>
+		<result property="ywyxm" column="ywyxm"/>
+		<result property="khdm" column="khdm"/>
+		
+	</resultMap>
+	
+	<select id="list" parameterType="Map" resultMap="KhResult">
+		select * from( select rownum as rown,a.* from ( select * from T_KH 
+		
+		order by id desc)a where rownum&lt;=#{page}*#{size}) b where b.rown&gt;(#{page}-1)*#{size}
+	</select>
+	
+	<select id="total" parameterType="Map" resultType="Long">
+		select count(*) from T_KH
+	</select>
+	
+	<update id="update" parameterType="Kh">
+		update T_KH
+		<set>
+			zt=#{zt}
+		</set>
+		where email=#{email}
+	</update>
+	
+	<delete id="delete" parameterType="String">
+		delete from T_KH where email=#{email}
+	</delete>
+	
+	
+	
+</mapper> 

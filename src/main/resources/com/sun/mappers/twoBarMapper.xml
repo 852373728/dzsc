@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.TwoBarDao">
+
+	<resultMap type="TwoBar" id="TwoBarResult">
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="xh" column="xh"/>
+		<result property="barId" column="barId"/>
+	</resultMap>
+	
+	<select id="findByBarId" parameterType="Map" resultMap="TwoBarResult">
+		select a.* from (select id,name from T_TWOBAR t where barid=#{barid} order by xh desc)a where rownum&lt;#{rowSize}
+	</select>
+	
+	<select id="findByHuodong" resultMap="TwoBarResult">
+		select id,name from T_TWOBAR t where barid=5 order by xh desc
+	</select>
+	
+	
+</mapper> 

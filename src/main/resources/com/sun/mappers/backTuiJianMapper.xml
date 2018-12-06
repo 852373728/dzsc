@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.BackTuiJianDao">
+
+	<resultMap type="TuiJian" id="TuiJianResult">
+		<result property="id" column="id"/>
+		<result property="sptpljLeft" column="sptpljLeft"/>
+		<result property="xh" column="xh"/>
+		<result property="show" column="show"/>
+		<result property="showCarousel" column="showCarousel"/>
+		<result property="xhCarousel" column="xhCarousel"/>
+		<result property="sptplj_carousel" column="sptplj_carousel"/>
+		<result property="homePageTuijianCarousel" column="homePageTuijianCarousel"/>
+		<result property="homePageTuijianCarouselXh" column="homePageTuijianCarouselXh"/>
+		<result property="homePageTuijianCarouselTp" column="homePageTuijianCarouselTp"/>
+		<result property="twobarName" column="twobarName"/>
+		<result property="spkId" column="spkId"/>
+	</resultMap>
+	
+	<select id="list" parameterType="Map" resultMap="TuiJianResult">
+		select * from( select rownum as rown,a.* from ( select t.* from T_TUIJIAN t,t_spk s
+   	 	where t.spkid=s.id and s.sj_xz='上架' and s.st_lb='在库' and t.twobarname&lt;&gt;'普通品种'
+   	 	<if test="searchName!=null and searchName!=''">
+   	 		and s.zjm || s.spdm || s.spmc like #{searchName} 
+   	 	</if>
+   	 	<if test="twobarName!='请选择'">
+   	 		and t.twobarName=#{twobarName}
+   	 	</if>
+		order by t.id desc)a where rownum&lt;=#{page}*#{size}) b where b.rown&gt;(#{page}-1)*#{size}
+	</select>
+	
+	<select id="total" parameterType="Map" resultType="Long">
+		select count(*) from T_TUIJIAN t,t_spk s
+		where t.spkid=s.id and s.sj_xz='上架' and s.st_lb='在库' and t.twobarname&lt;&gt;'普通品种'
+   	 	<if test="searchName!=null and searchName!=''">
+   	 		and s.zjm || s.spdm || s.spmc like #{searchName} 
+   	 	</if>
+   	 	<if test="twobarName!='请选择'">
+   	 		and t.twobarName=#{twobarName}
+   	 	</if>
+	</select>
+	
+	<!-- <insert id="add" parameterType="TuiJian">
+		insert into T_TUIJIAN (id,sptpljLeft,xh,show,showCarousel,xhCarousel,sptplj_carousel,homePageTuijianCarousel,homePageTuijianCarouselXh,homePageTuijianCarouselTp,twoBarId,spkId) 
+		values (tuijian_seq.nextval,#{sptpljLeft},#{xh},#{show},#{showCarousel},#{xhCarousel},#{sptplj_carousel},#{homePageTuijianCarousel},#{homePageTuijianCarouselXh},#{homePageTuijianCarouselTp},#{twoBarId},#{spkId})
+	</insert> -->
+	
+	<update id="update" parameterType="TuiJian">
+	 	update T_TUIJIAN 
+	 	<set>
+	 		<if test="sptpljLeft!=null and sptpljLeft!=''">
+	 			sptpljLeft=#{sptpljLeft},
+	 		</if>
+ 			xh=#{xh},
+ 			show=#{show},
+ 			showCarousel=#{showCarousel},
+ 			xhCarousel=#{xhCarousel},
+ 			<if test="sptplj_carousel!=null and sptplj_carousel!=''">
+ 				sptplj_carousel=#{sptplj_carousel},
+ 			</if>
+ 			homePageTuijianCarousel=#{homePageTuijianCarousel},
+ 			homePageTuijianCarouselXh=#{homePageTuijianCarouselXh},
+ 			<if test="homePageTuijianCarouselTp!=null and homePageTuijianCarouselTp!=''">
+ 				homePageTuijianCarouselTp=#{homePageTuijianCarouselTp},
+ 			</if>
+	 	</set>
+	 	where id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="Integer">
+		delete from T_TUIJIAN where id=#{id}
+	</delete>
+	
+</mapper> 

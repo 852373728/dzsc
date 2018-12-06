@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.BackMainTypeShowDao">
+
+	<resultMap type="MainTypeShow" id="MainTypeShowResult">
+		<result property="id" column="id"/>
+		<result property="homePageshow" column="homePageshow"/>
+		<result property="onePicTplj" column="onePicTplj"/>
+		<result property="homePagexh" column="homePagexh"/>
+		<result property="splbDm" column="splbDm"/>
+		<result property="spkId" column="spkId"/>
+	</resultMap>
+	
+	<select id="list" parameterType="Map" resultMap="MainTypeShowResult">
+		select * from( select rownum as rown,a.* from ( select t.* from T_MAINTYPESHOW t,t_spk s
+   	 	where t.spkid=s.id 
+   	 	<if test="searchName!=null and searchName!=''">
+   	 		and s.zjm || s.spdm || s.spmc like #{searchName} 
+   	 	</if>
+   	 	<if test="homePageshow!=null and homePageshow!=''">
+   	 		and t.homePageshow=#{homePageshow}
+   	 	</if>
+		order by t.id desc)a where rownum&lt;=#{page}*#{size}) b where b.rown&gt;(#{page}-1)*#{size}
+	</select>
+	
+	<select id="total" parameterType="Map" resultType="Long">
+		select count(*) from T_MAINTYPESHOW t,t_spk s
+		where t.spkid=s.id 
+   	 	<if test="searchName!=null and searchName!=''">
+   	 		and s.zjm || s.spdm || s.spmc like #{searchName} 
+   	 	</if>
+   	 	<if test="homePageshow!=null and homePageshow!=''">
+   	 		and t.homePageshow=#{homePageshow}
+   	 	</if>
+	</select>
+	
+	<insert id="add" parameterType="MainTypeShow">
+		insert into T_MAINTYPESHOW (id,homePageshow,onePicTplj,homePagexh,splbDm,spkId)
+		values (maintypeshow_seq.nextval,#{homePageshow},#{onePicTplj},#{homePagexh},#{splbDm},#{spkId})
+	</insert>
+	
+	<update id="update" parameterType="MainTypeShow">
+		update T_MAINTYPESHOW
+		<set>
+			homePageshow=#{homePageshow},
+			<if test="onePicTplj!=null and onePicTplj!=''">
+				onePicTplj=#{onePicTplj},
+			</if>
+			homePagexh=#{homePagexh},splbDm=#{splbDm},spkId=#{spkId},
+		</set>
+		where id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="Integer">
+		delete from T_MAINTYPESHOW where id=#{id}
+	</delete>
+	
+	
+</mapper> 

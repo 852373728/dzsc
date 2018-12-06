@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.RolesPermissionsDao">
+
+	<select id="byRolesName" parameterType="String" resultType="Integer">
+		select t.usercenterid from T_ROLES_USERCENTER t where t.rolesname=#{rolesName}
+	</select>
+	
+	<delete id="delete" parameterType="String">
+		delete from T_ROLES_USERCENTER t where t.rolesname=#{rolesname} 
+	</delete>
+	
+	<insert id="add" parameterType="com.sun.entity.Roles_permissions">
+		insert into T_ROLES_USERCENTER(id,rolesName,usercenterId)
+		values(roles_usercenter_seq.nextval,#{rolesName},#{usercenterId})
+	</insert>
+	
+	
+</mapper> 

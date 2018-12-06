@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.ZzzlDao">
+	<select id="judge" resultType="com.sun.entity.Zzzl" parameterType="String">
+		select * from T_ZZZL t where t.zzzt='生效' and t.yxrq&lt;sysdate and rownum&lt;2 and t.khdm=#{khdm}
+	</select>
+	
+</mapper> 

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.CollectionDao">
+
+	<resultMap type="Collect" id="CollectResult">
+		<result property="id" column="id"/>
+		<result property="spdm" column="spdm"/>
+		<result property="userName" column="userName"/>
+	</resultMap>
+	
+	<insert id="add" parameterType="Collect">
+		insert into T_COLLECTION (id,spdm,userName)
+		values (collection_seq.nextval,#{spdm},#{userName})
+	</insert>
+	
+	<select id="findByUserName" parameterType="String" resultMap="CollectResult">
+		select * from T_COLLECTION where userName=#{userName} order by id desc
+	</select>
+	
+	<select id="exit" parameterType="Map" resultType="Long">
+		select count(*) from T_COLLECTION where userName=#{userName} and spdm=#{spdm}
+	</select>
+	
+	<delete id="delete" parameterType="Integer">
+		delete from T_COLLECTION where id=#{id}
+	</delete>
+	
+</mapper> 

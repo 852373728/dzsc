@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.BackMainShowDao">
+
+	<resultMap type="MainShow" id="MainShowResult">
+		<result property="id" column="id"/>
+		<result property="sywzdm" column="sywzdm"/>
+		<result property="sywzmc" column="sywzmc"/>
+		<result property="tplj" column="tplj"/>
+		<result property="backcolor" column="backcolor"/>
+		<result property="xh" column="xh"/>
+		<result property="spkid" column="spkid"/>
+	</resultMap>
+	
+	<select id="list" parameterType="Map" resultMap="MainShowResult">
+		select * from( select rownum as rown,a.* from ( select t.* from T_MAINSHOW t,t_spk s
+   	 	where t.spkid=s.id 
+   	 	<if test="searchName!=null and searchName!=''">
+   	 		and s.zjm || s.spdm || s.spmc like #{searchName} 
+   	 	</if>
+   	 	<if test="sywzdm!=null and sywzdm!=''">
+   	 		and t.sywzdm=#{sywzdm}
+   	 	</if>
+		order by t.id desc)a where rownum&lt;=#{page}*#{size}) b where b.rown&gt;(#{page}-1)*#{size}
+	</select>
+	
+	<select id="total" parameterType="Map" resultType="Long">
+		select count(*) from T_MAINSHOW t,t_spk s
+		where t.spkid=s.id 
+   	 	<if test="searchName!=null and searchName!=''">
+   	 		and s.zjm || s.spdm || s.spmc like #{searchName} 
+   	 	</if>
+   	 	<if test="sywzdm!=null and sywzdm!=''">
+   	 		and t.sywzdm=#{sywzdm}
+   	 	</if>
+	</select>
+	
+	<insert id="add" parameterType="MainShow">
+		insert into T_MAINSHOW (id,sywzdm,sywzmc,tplj,xh,spkid,backcolor)
+		values (mainshow_seq.nextval,#{sywzdm},#{sywzmc},#{tplj},#{xh},#{spkid},#{backcolor})
+	</insert>
+	
+	<update id="update" parameterType="MainShow">
+		update T_MAINSHOW
+		<set>
+			sywzdm=#{sywzdm},sywzmc=#{sywzmc},
+			<if test="tplj!=null and tplj!=''">
+				tplj=#{tplj},
+			</if>
+			backcolor=#{backcolor},
+			xh=#{xh},spkid=#{spkid},
+		</set>
+		where id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="Integer">
+		delete from T_MAINSHOW where id=#{id}
+	</delete>
+	
+</mapper> 

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.JinxqDao">
+
+	<sql id="condition">
+		and s.sj_xz='上架'
+		<if test="web_splbdm!=null and web_splbdm!=''">
+			and s.web_splbdm =#{web_splbdm}
+		</if>
+		<if test="jxmc!=null and jxmc!=''">
+			and s.jxmc=#{jxmc}
+		</if>
+	</sql>
+
+	<select id="list" parameterType="Map" resultType="com.sun.entity.Jinxq">
+		 select * from (
+		 select a.*,rownum rn  from (
+		 select t.id,t.spdm,t.spmc,t.spph,t.yxq,(t.kcsl-t.ztsl) kysl,t.xsdj cxdj,s.pict,s.ylmc,s.spgg,s.sccj1 sccj,s.xsjg,s.dw,s.splb,s.pzwh from T_SPJINXQ t inner join  T_SPK s on t.spdm=s.spdm where t.delbbz=1
+		 <include refid="condition"/>
+		 order by t.id desc) a where rownum&lt;=#{page}*#{size})b where b.rn&gt;(#{page}-1)*#{size}
+	</select>
+	
+	<select id="unLongin" parameterType="Map" resultType="com.sun.entity.Jinxq">
+		 select * from (
+		 select a.*,rownum rn  from (
+		 select t.id,t.spdm,t.spmc,t.spph,s.pict,s.ylmc,s.spgg,s.sccj1 sccj,s.dw,s.splb,s.pzwh from T_SPJINXQ t inner join  T_SPK s on t.spdm=s.spdm where t.delbbz=1
+		 <include refid="condition"/>
+		 order by t.id desc) a where rownum&lt;=#{page}*#{size})b where b.rn&gt;(#{page}-1)*#{size}
+	</select>
+	
+	<select id="total" parameterType="Map" resultType="Long">
+		  select count(*) from T_SPJINXQ t inner join  T_SPK s on t.spdm=s.spdm where t.delbbz=1
+		   <include refid="condition"/>
+	</select>
+	
+	<select id="findSplbTwo" parameterType="Map" resultType="com.sun.entity.SpkCondition">
+		select s.web_splb,s.web_splbdm from T_SPJINXQ t inner join  T_SPK s on t.spdm=s.spdm where t.delbbz=1 and s.web_splbdm is not null 
+		 <include refid="condition"/>
+		group by s.web_splb, s.web_splbdm
+	</select>
+	
+	<select id="findJx" parameterType="Map" resultType="com.sun.entity.SpkCondition">
+		select s.jxmc from T_SPJINXQ t inner join  T_SPK s on t.spdm=s.spdm where t.delbbz=1 and s.jxdm is not null and s.jxmc is not null 
+		<include refid="condition"/>
+		group by s.jxmc
+	</select>
+	
+	<select id="findKc" parameterType="Map" resultType="Long">
+		select (t.kcsl-t.ztsl) kysl from T_SPJINXQ t where t.spdm=#{spdm} and t.spph=#{spph}
+	</select>
+	
+	<select id="getOne" parameterType="Map" resultType="com.sun.entity.Jinxq">
+		select t.spdm,t.spmc,t.spph,t.xsdj cxdj from T_SPJINXQ t inner join  T_SPK s on t.spdm=s.spdm where t.delbbz=1 and s.sj_xz='上架' and t.spdm=#{spdm} and t.spph=#{spph} and rownum&lt;2
+	</select>
+	
+	<update id="editZtsl" parameterType="Map" >
+		update T_SPJINXQ t set t.ztsl=ztsl+#{sl} where t.spdm=#{spdm} and t.spph=#{spph}
+	</update>
+	
+	<select id="unLoginInOne" parameterType="String" resultType="com.sun.entity.Spk">
+		select s.pict_sm,s.spdm,s.zjm,s.spmc,s.SCCJ1,s.spgg,s.pzwh,s.splsdj,s.pict,s.splb,s.nbzsl,s.wbzsl,s.cl_xz,s.web_splbdm,s.web_splb,s.ylmc,t.spph from T_SPJINXQ t inner join  T_SPK s on t.spdm=s.spdm where t.delbbz=1 and s.sj_xz='上架' and t.id=#{id} and rownum&lt;2
+	</select>
+	
+	<select id="LoginInOne" parameterType="String" resultType="com.sun.entity.Spk">
+		select s.pict_sm,s.spdm,s.zjm,s.spmc,s.SCCJ1,s.spgg,s.pzwh,s.splsdj,s.pict,s.splb,s.nbzsl,s.wbzsl,s.cl_xz,s.web_splbdm,s.web_splb,s.ylmc,s.xsjg,s.j_zj,s.qy_xz,s.cb4,s.lsdj,(t.kcsl-t.ztsl) kysl,t.xsdj cxdj, t.spph,t.yxq from T_SPJINXQ t inner join  T_SPK s on t.spdm=s.spdm where t.delbbz=1 and s.sj_xz='上架' and t.id=#{id} and rownum&lt;2
+	</select>
+	
+</mapper> 

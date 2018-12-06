@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.SpkDao">
+
+	<resultMap type="Spk" id="SpkResult">
+		<result property="id" column="id"/>
+		<result property="spdm" column="spdm"/>
+		<result property="zjm" column="zjm"/>
+		<result property="spmc" column="spmc"/>
+		<result property="spgg" column="spgg"/>
+		<result property="SCCJ1" column="SCCJ1"/>
+		<result property="sccj1dm" column="sccj1dm"/>
+		<result property="wbzsl" column="wbzsl"/>
+		<result property="nbzsl" column="nbzsl"/>
+		<result property="dw" column="dw"/>
+		<result property="sccj" column="sccj"/>
+		<result property="shl" column="shl"/>
+		<result property="jzrq" column="jzrq"/>
+		<result property="splb" column="splb"/>
+		<result property="splbdm" column="splbdm"/>
+		<result property="web_splb" column="web_splb"/>
+		<result property="web_splbdm" column="web_splbdm"/>
+		<result property="txm" column="txm"/>
+		<result property="pzwh" column="pzwh"/>
+		<result property="splsdj" column="splsdj"/>
+		<result property="sppfdj" column="sppfdj"/>
+		<result property="jxdm" column="jxdm"/>
+		<result property="jxmc" column="jxmc"/>
+		<result property="zlbz" column="zlbz"/>
+		<result property="USEDIN" column="USEDIN"/>
+		<result property="xingz" column="xingz"/>
+		<result property="yxq" column="yxq"/>
+		<result property="store" column="store"/>
+		<result property="baoz" column="baoz"/>
+		<result property="SPM" column="SPM"/>
+		<result property="YWM" column="YWM"/>
+		<result property="khdm" column="khdm"/>
+		<result property="khmc" column="khmc"/>
+		<result property="khxz" column="khxz"/>
+		<result property="qy_xz" column="qy_xz"/>
+		<result property="cl_xz" column="cl_xz"/>
+		<result property="cx_xz" column="cx_xz"/>
+		<result property="SPph" column="SPph"/>
+		<result property="yxrq" column="yxrq"/>
+		<result property="j_zj" column="j_zj"/>
+		<result property="j_xj" column="j_xj"/>
+		<result property="Lastupdate_ry" column="Lastupdate_ry"/>
+		<result property="Lastupdate_sj" column="Lastupdate_sj"/>
+		<result property="sj_xz" column="sj_xz"/>
+		<result property="Hasupload" column="Hasupload"/>
+		<result property="pict" column="pict"/>
+		<result property="xzmc" column="xzmc"/>
+		<result property="ylmc" column="ylmc"/>
+		<result property="kx_xz" column="kx_xz"/>
+		<result property="xj_xz" column="xj_xz"/>
+		<result property="j_cxj" column="j_cxj"/>
+		<result property="st_lb" column="st_lb"/>
+		<result property="lsdj" column="lsdj"/>
+		<result property="cb4" column="cb4"/>
+		<result property="xsjg" column="xsjg"/>
+		<result property="xlph" column="xlph"/>
+		<result property="djph" column="djph"/>
+		<result property="homePageshow" column="homePageshow"/>
+		<result property="onePicTplj" column="onePicTplj"/>
+		<result property="homePagexh" column="homePagexh"/>
+	</resultMap>
+	
+	<resultMap type="TwoBar" id="twoBarResult">
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+	</resultMap>
+	
+	<select id="getOne" parameterType="Integer" resultMap="SpkResult">
+		select pict_sm,id,spdm,zjm,spmc,SCCJ1,spgg,pzwh,splsdj,pict,splb,nbzsl,wbzsl,cl_xz,xingz,USEDIN,store,baoz,yxq,zlbz,web_splbdm,web_splb,ylmc from t_spk where sj_xz='上架' and st_lb='在库' and id=#{id} and rownum&lt;2
+	</select>
+	
+	<!-- 用户登录后的查询，查询条件不变，展示字段多了些，未登录前查询的是getOne，多个user，以后的其它命名格式一样-->
+	<select id="getOneUser" parameterType="Integer" resultMap="SpkResult">
+		select pict_sm,id,spdm,zjm,spmc,SCCJ1,spgg,dw,pzwh,ylmc,splsdj,pict,splb,nbzsl,wbzsl,cl_xz,xingz,USEDIN,store,baoz,yxq,zlbz,web_splbdm,web_splb,xsjg,j_zj,qy_xz,ywsl-ztsl as kysl,lsdj,cb4 from t_spk where sj_xz='上架' and st_lb='在库' and rownum&lt;2 and id=#{id}
+	</select>
+	
+	<!-- 用户登录后的查询，查询条件不变，展示字段多了些，-->
+	<select id="getOneUserBymap" parameterType="Map" resultMap="SpkResult">
+		select id,spdm,zjm,spmc,SCCJ1,spgg,dw,pzwh,splsdj,pict,splb,nbzsl,wbzsl,cl_xz,xingz,USEDIN,store,baoz,yxq,zlbz,web_splbdm,web_splb,xsjg,j_zj,ylmc,kx_xz,qy_xz,ywsl-ztsl as kysl from t_spk where sj_xz='上架' and st_lb='在库' and rownum&lt;2
+		<if test="spdm!=null and spdm!=''">
+			and spdm=#{spdm}
+		</if>
+	</select>
+	
+	
+	<select id="sale" resultMap="SpkResult">
+		select a.* from(
+		select id,spdm,spmc,xlph from t_spk where sj_xz='上架' and st_lb='在库' order by xlph desc,id desc) a where rownum&lt;9
+	</select>
+	
+	<select id="click" resultMap="SpkResult">
+		select a.* from(
+		select id,spdm,spmc,djph from t_spk where sj_xz='上架' and st_lb='在库' order by djph desc,id desc) a where rownum&lt;9
+	</select>
+	
+	
+	<select id="hotSale" parameterType="Map" resultMap="SpkResult">
+		select a.* from (select id,spdm,spmc,xlph,pict,splsdj from t_spk where sj_xz='上架' and st_lb='在库' and web_splbdm in 
+		<foreach item="item" index="index" collection="array" 
+                 open="(" separator="," close=")">
+                #{item}
+        </foreach>
+		order by ${px} desc) a where rownum&lt;#{rownum}
+	</select>
+	<!-- 用户登陆后的查询 -->
+	<select id="hotSaleUser" parameterType="Map" resultMap="SpkResult">
+		select a.* from (select id,spdm,spmc,xlph,pict,splsdj,xsjg,j_zj,qy_xz from t_spk where sj_xz='上架' and st_lb='在库' and web_splbdm in 
+		<foreach item="item" index="index" collection="array" 
+                 open="(" separator="," close=")">
+                #{item}
+        </foreach>
+		order by ${px} desc) a where rownum&lt;#{rownum}
+	</select>
+	
+	<sql id="condition">
+		and t.sj_xz='上架'
+		and t.st_lb='在库'
+		<if test="array!=null and array.length>0">
+			and t.web_splbdm in
+			<foreach item="item" index="index" collection="array" 
+                 open="(" separator="," close=")">
+                #{item}
+        	</foreach>
+		</if>
+		<if test="web_splbdm!=null and web_splbdm!=''">
+			and t.web_splbdm =#{web_splbdm}
+		</if>
+		<if test="SCCJ1!=null and SCCJ1!=''">
+			and t.SCCJ1 =#{SCCJ1}
+		</if>
+		<if test="jxmc!=null and jxmc!=''">
+			and t.jxmc =#{jxmc}
+		</if>
+		<if test="xzmc!=null and xzmc!=''">
+			and t.xzmc =#{xzmc}
+		</if>
+		<if test="ylmc!=null and ylmc!=''">
+			and t.ylmc like #{ylmc}
+		</if>
+		<if test="qy_xz!=null and qy_xz!=''">
+			<choose>
+				<when test="qy_xz==1">
+					and t.qy_xz is null
+				</when>
+				<when test="qy_xz==2">
+					and t.qy_xz is not null
+				</when>
+			</choose>
+		</if>
+		<if test="tjhd!=null and tjhd!=''">
+			and s.spkid=t.id
+			<if test="tjhd=='T_TUIJIAN'">
+				and s.twobarname is not null and s.twobarname&lt;&gt;'普通品种'
+			</if>
+			<if test="tjhd=='T_HUODONG'">
+				and s.hdtime>sysdate
+			</if>
+		</if>
+		<if test="twobarName!=null and twobarName!=''">
+			and s.twobarName=#{twobarName}
+		</if>
+		<if test="sfyx!=null">
+			and s.sfyx=1
+		</if>
+		<if test="bigSearch!=null and bigSearch!=''">
+			and t.zjm || t.spdm || t.spmc || t.usedin  like #{bigSearch}
+		</if>
+	</sql>
+	
+	<sql id="tuijian">
+		<if test="tjhd!=null and tjhd !=''">
+			,${tjhd} s
+		</if>
+	</sql>
+	
+	<select id="findSpkList" parameterType="Map" resultMap="SpkResult">
+		select * from (
+		select rownum as ron,a.* from (
+		select t.id,t.spdm,t.zjm,t.spmc,t.spgg,t.sccj1,t.sccj1dm,t.dw,t.wbzsl,t.nbzsl,t.pict,t.splb, t.splbdm,t.pzwh,t.ylmc,t.kx_xz,t.cl_xz,t.yxq from t_spk t 
+			<include refid="tuijian" />
+		<where>
+			<include refid="condition" />
+		</where>
+		order by t.ylmc
+		<choose>
+			<when test="listPh==2">
+				,t.xlph desc
+			</when>
+			<when test="listPh==3">
+				,t.djph desc
+			</when>
+			<otherwise>
+				,t.id desc
+			</otherwise>
+		</choose>
+		) a where rownum&lt;=#{page}*#{size})b where b.ron&gt;(#{page}-1)*#{size}
+	</select>
+	
+	<!-- 用户登录后 -->
+	<select id="findSpkListUser" parameterType="Map" resultMap="SpkResult">
+		select * from (
+		select rownum as ron,a.* from (
+		select t.id,t.spdm,t.zjm,t.spmc,t.spgg,t.sccj1,t.sccj1dm,t.dw,t.wbzsl,t.nbzsl,t.pict,t.splb, t.splbdm,t.pzwh,t.ylmc,t.j_zj,t.kx_xz,t.qy_xz,t.xsjg,t.yxq,t.cl_xz,t.ywsl-t.ztsl as kysl from t_spk t 
+			<include refid="tuijian" />
+		<where>
+			<include refid="condition" />
+		</where>
+		order by t.ylmc
+		<choose>
+			<when test="listPh==2">
+				,t.xlph desc
+			</when>
+			<when test="listPh==3">
+				,t.djph desc
+			</when>
+			<otherwise>
+				,t.id desc
+			</otherwise>
+		</choose>
+		) a where rownum&lt;=#{page}*#{size})b where b.ron&gt;(#{page}-1)*#{size}
+	</select>
+	
+	<select id="total" parameterType="Map" resultType="Long">
+		select count(*) from t_spk t
+		<include refid="tuijian" />
+		<where>
+			<include refid="condition" />
+		</where>
+	</select>
+	
+	<select id="findSplbTwo" parameterType="Map" resultMap="SpkResult">
+		select t.web_splb,t.web_splbdm from t_spk t   
+		<include refid="tuijian" />
+		<where>
+			and t.web_splbdm is not null
+			<include refid="condition" />
+		</where>
+		group by t.web_splb, t.web_splbdm
+	</select>
+	
+	<select id="findSplbOne" parameterType="Map" resultMap="SpkResult">
+		select b.lbdm web_splbdm,b.lbmc web_splb from t_spklb b where b.lbdm in (select  s.lbparent from T_SPKLB s where s.lbdm in (select t.web_splbdm from t_spk t
+		<include refid="tuijian" />
+		<where>
+			and t.web_splbdm is not null
+			<include refid="condition" />
+		</where>
+		group by t.web_splb, t.web_splbdm))
+	</select>
+	
+	<select id="findSccj" parameterType="Map" resultMap="SpkResult">
+		select a.cjmc SCCJ1,a.cjdm sccj1dm from( select * from T_SCCJ c where c.cjmc in (select t.sccj1 from T_SPK t 
+		<include refid="tuijian" />
+		<where>
+			<include refid="condition" />
+		</where>
+		group by t.sccj1) order by xh desc) a where rownum&lt;=20
+	</select>
+	
+	<select id="findJx" parameterType="Map" resultMap="SpkResult">
+		select t.jxmc from T_SPK t
+		<include refid="tuijian" />
+		<where>
+			and t.jxdm is not null 
+			and t.jxmc is not null
+			<include refid="condition" />
+		</where>
+		group by t.jxmc
+	</select>
+	
+	<select id="findXz" parameterType="Map" resultMap="SpkResult">
+		select t.xzmc from T_SPK t
+		<where>
+			and t.xzmc is not null 
+			<include refid="condition" />
+		</where>
+		group by t.xzmc
+	</select>
+	
+	<select id="findyl" parameterType="Map" resultMap="SpkResult">
+		select t.ylmc from T_SPK t 
+		<where>
+			and t.ylmc is not null 
+			<include refid="condition" />
+		</where>
+		group by t.ylmc
+	</select>
+	
+	<select id="findTwoBar" parameterType="Map" resultMap="twoBarResult">
+		select r.id,r.name from t_twobar r where r.name in (
+		select s.twobarname from t_spk t 
+		<include refid="tuijian" />
+		<where>
+			<include refid="condition" />
+		</where>
+		 group by s.twobarname) order by r.xh desc
+	</select>
+	
+	<select id="hotNew" resultMap="SpkResult">
+		select a.* from (
+		select t.id,t.spdm,t.spmc from T_SPK t where sj_xz='上架' and st_lb='在库' order by t.xj_xz,t.xlph desc) a where rownum&lt;=10
+	</select>
+	
+	<select id="findBySCCJ1" parameterType="Map" resultMap="SpkResult">
+		select a.* from(
+		select spgg,splb,pzwh,id,spdm,zjm,spmc,SCCJ1,splsdj,pict from t_spk where sj_xz='上架' and st_lb='在库' 
+		<choose>
+			<when test="spdmlist!=null and spdmlist!=''">
+				and spdm in (${spdmlist})
+			</when>
+			<otherwise>
+				and spdm in ('')
+			</otherwise>
+		</choose>
+		order by xlph desc)a 
+		<if test="rownum_sccj!=null">
+			where rownum&lt;6
+		</if>
+	</select>
+	<!-- 用户登录后 -->
+	<select id="findBySCCJ1User" parameterType="Map" resultMap="SpkResult">
+		select a.* from(
+		select spgg,splb,pzwh,id,spdm,zjm,spmc,SCCJ1,splsdj,pict,xsjg,j_zj,qy_xz from t_spk where sj_xz='上架' and st_lb='在库'
+		<choose>
+			<when test="spdmlist!=null and spdmlist!=''">
+				and spdm in (${spdmlist})
+			</when>
+			<otherwise>
+				and spdm in ('')
+			</otherwise>
+		</choose>
+		order by xlph desc)a 
+		<if test="rownum_sccj!=null">
+			where rownum&lt;6
+		</if>
+	</select>
+	<select id="findBySCCJ1Count" parameterType="Map" resultType="Long">
+		select count(*) from t_spk where sj_xz='上架' and st_lb='在库' 
+		<choose>
+			<when test="spdmlist!=null and spdmlist!=''">
+				and spdm in (${spdmlist})
+			</when>
+			<otherwise>
+				and spdm in ('')
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="goodRight" parameterType="Map" resultMap="SpkResult">
+		select a.* from (select id,spdm,spmc,xlph,pict,splsdj,spgg from t_spk
+		<where>
+			and sj_xz='上架'
+			and st_lb='在库'
+			<if test="web_splbdm!=null and web_splbdm!=''">
+				and web_splbdm=#{web_splbdm}
+			</if>
+		</where>
+		order by ${px} desc) a where rownum&lt;6
+	</select>
+	<!-- 用户登录后 -->
+	<select id="goodRightUser" parameterType="Map" resultMap="SpkResult">
+		select a.* from (select id,spdm,spmc,xlph,pict,splsdj,spgg,xsjg,j_zj,qy_xz from t_spk
+		<where>
+			and sj_xz='上架'
+			and st_lb='在库'
+			<if test="web_splbdm!=null and web_splbdm!=''">
+				and web_splbdm=#{web_splbdm}
+			</if>
+		</where>
+		order by ${px} desc) a where rownum&lt;6
+	</select>
+	
+	<update id="editph" parameterType="Map">
+		update T_SPK
+		<set>
+			<if test="ph=='djph'">
+				djph=djph+1,
+			</if>
+			<if test="ph=='xlph'">
+				xlph=xlph+#{num},
+				ztsl=ztsl+#{num},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+	<select id="kysl" parameterType="String" resultMap="SpkResult">
+		select ywsl-ztsl as kysl,spmc,qy_xz,cl_xz,wbzsl,nbzsl,xsjg from t_spk where spdm=#{spdm} and rownum&lt;2
+	</select>
+	
+	<select id="discount" parameterType="Map" resultType="Float">
+		select t.xsjg from t_spk t where t.spdm=#{spdm} and t.khdm=#{khdm}
+	</select>
+	
+	<select id="shouyexpss" resultMap="SpkResult">
+		select id,spmc,pict,sccj1 from t_spk where sj_xz='上架' and st_lb='在库' and xj_xz='新品上市' and rownum&lt;9 order by id desc
+	</select>
+	
+	
+</mapper> 

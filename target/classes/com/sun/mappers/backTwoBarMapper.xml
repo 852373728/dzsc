@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.BackTwoBarDao">
+
+	<resultMap type="TwoBar" id="TwoBarResult">
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="xh" column="xh"/>
+		<result property="barId" column="barId"/>
+	</resultMap>
+	
+	<select id="getOne" parameterType="Integer" resultMap="TwoBarResult">
+		select * from T_TWOBAR t where t.id=#{id}
+	</select>
+	
+	<select id="list" parameterType="Map" resultMap="TwoBarResult">
+		select * from( select rownum as rown,a.* from ( select * from T_TWOBAR t 
+		<where>
+			<if test="name!=null and name!=''">
+				and t.name like #{name}
+			</if>
+			<if test="barId!=null and barId!=0">
+				and t.barId=#{barId}
+			</if>
+		</where>
+		order by id desc)a where rownum&lt;=#{page}*#{size}) b where b.rown&gt;(#{page}-1)*#{size}
+	</select>
+	
+	<select id="total" parameterType="Map" resultType="Long">
+		select count(*) from T_TWOBAR t
+		<where>
+			<if test="name!=null and name!=''">
+				and t.name like #{name}
+			</if>
+			<if test="barId!=null and barId!=0">
+				and t.barId=#{barId}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="add" parameterType="TwoBar" >
+		insert into T_TWOBAR (id,name,xh,barId) 
+		values (twobar_seq.nextval,#{name},#{xh},#{barId})
+	</insert>
+	
+	<update id="update" parameterType="TwoBar">
+		update T_TWOBAR 
+		<set>
+			name=#{name},xh=#{xh},barId=#{barId},
+		</set>
+		where id=#{id} 
+	</update>
+	
+	<delete id="delete" parameterType="Integer">
+		delete from T_TWOBAR where id=#{id}
+	</delete>
+	
+	<select id="findByBarId" parameterType="Integer" resultMap="TwoBarResult">
+		select t.id,t.name from T_TWOBAR t where t.barid=#{barid}
+	</select>
+	
+</mapper> 

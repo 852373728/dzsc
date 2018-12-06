@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.UseKhDao">
+
+	<resultMap type="UseKh" id="UseKhResult">
+		<result property="id" column="id"/>
+		<result property="khdm" column="khdm"/>
+		<result property="khmc" column="khmc"/>
+		<result property="jdrq" column="jdrq"/>
+		<result property="qydm" column="qydm"/>
+		<result property="qymc" column="qymc"/>
+		<result property="khxz" column="khxz"/>
+		<result property="spbz" column="spbz"/>
+	</resultMap>
+	
+	<select id="listK" parameterType="String" resultType="String">
+		select khdm from T_USEKH t where ${condition}
+	</select>
+	
+</mapper> 

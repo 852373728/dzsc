@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.TuiJianDao">
+
+	<resultMap type="TuiJian" id="TuiJianResult">
+		<result property="id" column="id"/>
+		<result property="sptpljLeft" column="sptpljLeft"/>
+		<result property="xh" column="xh"/>
+		<result property="show" column="show"/>
+		<result property="showCarousel" column="showCarousel"/>
+		<result property="xhCarousel" column="xhCarousel"/>
+		<result property="sptplj_carousel" column="sptplj_carousel"/>
+		<result property="homePageTuijianCarousel" column="homePageTuijianCarousel"/>
+		<result property="homePageTuijianCarouselXh" column="homePageTuijianCarouselXh"/>
+		<result property="homePageTuijianCarouselTp" column="homePageTuijianCarouselTp"/>
+		<result property="twobarName" column="twobarName"/>
+		<result property="spkId" column="spkId"/>
+	</resultMap>
+	
+	<select id="findByhpCarosel" resultMap="TuiJianResult">
+		select a.* from (select * from T_TUIJIAN t where t.homepagetuijiancarousel=1 order by t.homepagetuijiancarouselxh desc)a where rownum&lt;6
+	</select>
+	
+	<select id="findBytwoBarName" parameterType="String" resultMap="TuiJianResult">
+		select a.* from (select t.spkid from T_TUIJIAN t inner join  T_SPK s on s.id=t.spkid where t.show=1 and s.sj_xz='上架' and s.st_lb='在库' and t.twobarname=#{twobarname} order by t.xh desc)a where rownum&lt;6
+	</select>
+	
+	<select id="carousel" resultMap="TuiJianResult">
+		select a.* from (
+		select t.id,t.spkid,t.sptplj_carousel from T_TUIJIAN t where t.showcarousel=1 order by t.xhcarousel desc) a where rownum&lt;6
+	</select>
+	
+	<select id="findByshow2" parameterType="String" resultMap="TuiJianResult">
+		select a.* from (select t.spkid,t.sptpljLeft from T_TUIJIAN t inner join  T_SPK s on s.id=t.spkid where t.show=2 and s.sj_xz='上架' and s.st_lb='在库' and t.twobarname=#{twobarname} order by t.xh desc)a where rownum&lt;2
+	</select>
+	
+	
+</mapper> 

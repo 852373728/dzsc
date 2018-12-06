@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.SpddDao">
+
+	<resultMap type="Spdd" id="SpddResult">
+		<result property="id" column="id"/>
+		<result property="ddbh" column="ddbh"/>
+		<result property="zongjia" column="zongjia"/>
+		<result property="zdrq" column="zdrq"/>
+		<result property="username" column="username"/>
+		<result property="dwmc" column="dwmc"/>
+		<result property="lxr" column="lxr"/>
+		<result property="lxdh" column="lxdh"/>
+		<result property="adress" column="adress"/>
+		<result property="zt" column="zt"/>
+		<result property="ywybh" column="ywybh"/>
+		<result property="ywyxm" column="ywyxm"/>
+		<result property="khdm" column="khdm"/>
+	</resultMap>
+	
+	<insert id="add" parameterType="Spdd">
+		insert into t_spdd (id,ddbh,zongjia,zdrq,username,dwmc,lxr,lxdh,adress,zt,ywybh,ywyxm,khdm) 
+		values (spdd_seq.nextval,#{ddbh},#{zongjia},#{zdrq},#{username},#{dwmc},#{lxr},#{lxdh},#{adress},#{zt},#{ywybh},#{ywyxm},#{khdm})
+	</insert>
+	
+	<select id="maxddh"  resultType="String">
+		select max(t.ddbh) ddbh  from T_SPDD t where to_char( t.zdrq,'yyyy-mm-dd')=to_char(sysdate,'yyyy-mm-dd')
+	</select>
+	
+	<select id="list" parameterType="Map" resultMap="SpddResult">
+		select * from T_SPDD t where username=#{username} 
+		<if test="startTime!=null and startTime!=''">
+			and zdrq&gt;=to_date(#{startTime},'yyyy/mm/dd') 
+		</if>
+		<if test="endTime!=null and endTime!=''">
+			and zdrq&lt;=to_date(#{endTime},'yyyy/mm/dd') 
+		</if>
+		<if test="zt!=null and zt!=''">
+			and zt=#{zt}
+		</if>
+		order by zdrq desc
+	</select>
+	
+	<select id="getOne" parameterType="Map" resultMap="SpddResult">
+		select * from T_SPDD t where rownum&lt;2
+		<if test="id!=null">
+			and id=#{id}
+		</if>
+		<if test="ddbh!=null and ddbh!=''">
+			and ddbh=#{ddbh}
+		</if>
+	</select>
+	
+</mapper> 

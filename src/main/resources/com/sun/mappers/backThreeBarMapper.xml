@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.BackThreeBarDao">
+
+	<resultMap type="ThreeBar" id="ThreeBarResult">
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="huoDongStart" column="huoDongStart"/>
+		<result property="huoDongOver" column="huoDongOver"/>
+		<result property="carousel" column="carousel"/>
+		<result property="carouselXh" column="carouselXh"/>
+		<result property="carouselTplj" column="carouselTplj"/>
+		<result property="twoBarId" column="twoBarId"/>
+	</resultMap>
+	
+	<select id="getOne" parameterType="Integer" resultMap="ThreeBarResult">
+		select * from T_THREEBAR t where t.id=#{id}
+	</select>
+	
+	<select id="list" parameterType="Map" resultMap="ThreeBarResult">
+		select * from( select rownum as rown,a.* from ( select * from T_THREEBAR t 
+		<where>
+			<if test="name!=null and name!=''">
+				and t.name like #{name}
+			</if>
+			<if test="twoBarId!=null and twoBarId!=0">
+				and t.twoBarId=#{twoBarId}
+			</if>
+		</where>
+		order by t.id desc)a where rownum&lt;=#{page}*#{size}) b where b.rown&gt;(#{page}-1)*#{size}
+	</select>
+	
+	<select id="total" parameterType="Map" resultType="Long">
+		select count(*) from T_THREEBAR t
+		<where>
+			<if test="name!=null and name!=''">
+				and t.name like #{name}
+			</if>
+			<if test="twoBarId!=null and twoBarId!=0">
+				and t.twoBarId=#{twoBarId}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="add" parameterType="ThreeBar">
+		insert into T_THREEBAR (id,name,huoDongStart,huoDongOver,carousel,carouselXh,carouselTplj,twoBarId)
+		values(threebar_seq.nextval,#{name},sysdate,#{huoDongOver},#{carousel},sysdate,#{carouselTplj},#{twoBarId})
+	</insert>
+	
+	<update id="update" parameterType="ThreeBar">
+		update T_THREEBAR
+		<set>
+				name=#{name},
+				huoDongOver=#{huoDongOver},
+				carousel=#{carousel},
+				<if test="carouselTplj!=null and carouselTplj!=''">
+					carouselTplj=#{carouselTplj},
+				</if>
+				twoBarId=#{twoBarId},
+		</set>
+		where id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="Integer">
+		delete from T_THREEBAR where id=#{id}
+	</delete>
+	
+	<select id="listByTwoBar" parameterType="Integer" resultMap="ThreeBarResult">
+		select t.id,t.name from T_THREEBAR t
+		<where>
+				and t.huodongover>sysdate
+			<if test="twoBarId!=null and twoBarId!=0">
+				and t.twoBarId=#{twoBarId}
+			</if>
+		</where>
+		
+		
+	</select>
+	
+	
+</mapper> 

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.SpddMxDao">
+
+	<resultMap type="SpddMx" id="SpddMxResult">
+		<result property="id" column="id"/>
+		<result property="spdm" column="spdm"/>
+		<result property="spmc" column="spmc"/>
+		<result property="dw" column="dw"/>
+		<result property="spgg" column="spgg"/>
+		<result property="xsjg" column="xsjg"/>
+		<result property="sl" column="sl"/>
+		<result property="ddbh" column="ddbh"/>
+		<result property="hdnr" column="hdnr"/>
+	</resultMap>
+	
+	<insert id="add" parameterType="SpddMx">
+		insert into T_SPDDMX (id,spdm,spmc,dw,spgg,xsjg,sl,ddbh,hdnr,sh,shbz,spph) 
+		values (spddmx_seq.nextval,#{spdm},#{spmc},#{dw},#{spgg},#{xsjg},#{sl},#{ddbh},#{hdnr},'1','通过',#{spph})
+	</insert>
+	
+	<select id="list" parameterType="Map" resultMap="SpddMxResult">
+		select * from T_SPDDMX 
+		<where>
+			<if test="ddbh!=null and ddbh!=''">
+				and ddbh=#{ddbh}
+			</if>
+		</where>
+	</select>
+	
+</mapper> 

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.ShopCarDao">
+
+	<resultMap type="ShopCar" id="ShopCarResult">
+		<result property="id" column="id"/>
+		<result property="spdm" column="spdm"/>
+		<result property="num" column="num"/>
+		<result property="username" column="username"/>
+	</resultMap>
+	
+	<insert id="add" parameterType="ShopCar">
+		insert into t_shopcar(id,spdm,num,username) 
+		values (shopcar_seq.nextval,#{spdm},#{num},#{username})
+	</insert>
+	
+	<select id="list" parameterType="Map" resultMap="ShopCarResult">
+		select * from T_SHOPCAR t where t.spph is null
+		<if test="spdm!=null and spdm!=''">
+			and t.spdm=#{spdm}
+		</if>
+		<if test="username!=null and username!=''">
+			and t.username=#{username}
+		</if>
+	</select>
+	
+	<select id="Count" parameterType="Map" resultType="Long">
+		select count(*) from T_SHOPCAR t
+		<where>
+			<if test="username!=null and username!=''">
+				and t.username=#{username}
+			</if>
+		</where>
+	</select>
+	
+	<update id="update" parameterType="ShopCar">
+		update T_SHOPCAR t 
+		<set>
+			<if test="num!=null">
+				t.num=t.num+#{num},
+			</if>
+		</set>
+		where t.spdm=#{spdm} and t.username=#{username} and t.spph is null
+	</update>
+	<delete id="delete" parameterType="Integer">
+		delete from T_SHOPCAR where id=#{id}
+	</delete>
+	<delete id="deleteByMap" parameterType="Map">
+		delete from T_SHOPCAR 
+		<where>
+			<if test="spdm!=null and spdm!=''">
+				and spdm=#{spdm}
+			</if>
+			<if test="username!=null and username!=''">
+				and username=#{username}
+			</if>
+		</where>
+	</delete>
+	
+	<insert id="addCx" parameterType="com.sun.entity.ShopCar" >
+		insert into t_shopcar(id,spdm,num,username,spph) 
+		values (shopcar_seq.nextval,#{spdm},#{num},#{username},#{spph})
+	</insert>	
+	
+	<select id="judgeExit" parameterType="com.sun.entity.ShopCar" resultType="Long">
+		select count(*) from T_SHOPCAR t where t.username=#{username} and t.spdm=#{spdm} and t.spph=#{spph}
+	</select>
+	
+	<update id="editExit" parameterType="com.sun.entity.ShopCar">
+		update T_SHOPCAR t set t.num=t.num+#{num} where t.username=#{username} and t.spdm=#{spdm} and t.spph=#{spph}
+	</update>
+	
+	<select id="cxList" parameterType="String" resultType="com.sun.entity.Jinxq">
+		select t.id,t.spdm,t.num,t.spph,s.spmc,(s.kcsl-s.ztsl) kysl,s.xsdj cxdj,s.yxq from T_SHOPCAR t,t_spjinxq s where s.delbbz=1 and t.spdm=s.spdm and t.spph=s.spph and t.username=#{username} and t.spph is not null
+	</select>
+	
+</mapper> 
